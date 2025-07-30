@@ -51,7 +51,7 @@ async function checkClassesAndNotify() {
         console.log(`Max notifications (${MAX_NOTIFICATIONS_PER_CLASS}) reached for class ${cls.classNumber} (${cls.title}). Skipping.`);
       } else if (now >= nextSend) {
         const message = `OPEN SEAT: ${cls.className}\n${cls.title}\nInstructor: ${cls.instructor}\nLocation: ${cls.location}\nSeats: ${cls.seats}`;
-        //await fetch(`https://ntfy.sh/${TOPIC}`, { method: 'POST', body: message });
+        await fetch(`https://ntfy.sh/${TOPIC}`, { method: 'POST', body: message });
         console.log(`[${new Date().toLocaleString()}] ntfy notification sent for class ${cls.classNumber}:`);
         console.log(message, '\n');
         console.log(`Next notification for class ${cls.classNumber} in ${tracker.interval} hour(s). (${tracker.notificationCount + 1}/${MAX_NOTIFICATIONS_PER_CLASS})\n`);
