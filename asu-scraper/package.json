@@ -2,9 +2,10 @@
   "name": "asu-scraper",
   "version": "1.0.0",
   "type": "module",
-  "main": "index.js",
+  "main": "scrape-seats.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "playwright install chromium",
+    "start": "node scrape-seats.js"
   },
   "keywords": [],
   "author": "",
