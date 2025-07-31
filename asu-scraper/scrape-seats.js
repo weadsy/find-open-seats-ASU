@@ -89,9 +89,10 @@ async function checkClassesAndNotify(url) {
 }
 
 // Run all checks in parallel
-function runAllChecks() {
+async function runAllChecks() {
   console.log(`\n[${new Date().toLocaleString()}] Checking Classes:`);
-  Promise.all(URLS.map(url => checkClassesAndNotify(url)));
+  await Promise.all(URLS.map(url => checkClassesAndNotify(url)));
+  console.log(`Next check in ${CHECK_INTERVAL_MINUTES} minutes...`);
 }
 
 setInterval(runAllChecks, CHECK_INTERVAL_MINUTES * 60 * 1000);
