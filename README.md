@@ -13,11 +13,11 @@ Get updated when seats open for a class or classes. Uses the ntfy mobile app to 
 3) npm install (installs playwright and chromium)
 4) npm start (or node scrape-seats.js)
 
-**Not an ASU student?**
-You can easily use this script for other schools with public class search pages by using a new URL:
+**Not an ASU student?**  
+You can easily use this script for other schools with public class search pages by using a different URL and parameters:  
 
-const BASE_URL = 'https://catalog.apps.asu.edu/catalog/classes/classlist?campusOrOnlineSelection=C&honors=F&promod=F&searchType=all';
-const URLS = CLASS_SEARCH_NAME.map(item => {
-  const [subject, catalogNbr] = item.split(' ');
-  return `${BASE_URL}&subject=${subject}&catalogNbr=${catalogNbr}&term=${TERM_NUMBER}`;
+const BASE_URL = 'https://catalog.apps.asu.edu/catalog/classes/classlist?campusOrOnlineSelection=C&honors=F&promod=F&searchType=all';  
+const URLS = CLASS_SEARCH_NAME.map(item => {  
+  const [subject, catalogNbr] = item.split(' ');  
+  return `${BASE_URL}&subject=${subject}&catalogNbr=${catalogNbr}&term=${TERM_NUMBER}`;  
 });
