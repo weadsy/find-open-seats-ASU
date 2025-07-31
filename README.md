@@ -1,5 +1,5 @@
 # find-open-seats-ASU
-Get updated when seats open for a class or classes. Uses the ntfy mobile app to send push notifications. Headless Playwright script checks seats every 5 minutes at a class search URL. Easily check for multiple different classes (CSE 471, CSE 475). This is a Node.js project that uses chromium.
+Get updated when seats open for a class or classes. Uses the ntfy mobile app to send push notifications. Headless Playwright script checks seats every 5 minutes at a class search URL. Easily check for multiple different classes (CSE 471, CSE 475) or change term. This is a Node.js project that uses chromium.
 
 1) Download the ntfy app and create your own topic with a unique name (my-topic-1922AB) for free. Add the topic to the script.
 2) This script uses the class search page URLs, instead of adding multiple different URLs just add the class name to the list eg. \['CSE 471', 'MAT 443'\]. You can also change the term (spring, summer, fall).
