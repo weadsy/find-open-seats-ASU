@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 
 const CHECK_INTERVAL_MINUTES = 5;
-const TOPIC = 'asu-alerts'; //ntfy topic
+const TOPIC = ''; //ntfy topic
 const SKIP_CLASS_NUMBERS = [/* '80982' */];
 const WHITELIST_CLASS_NUMBERS = ['85046', '77919']; // Only these will be checked
 const MAX_NOTIFICATIONS_PER_CLASS = 6; // Total notifications before stopping
@@ -17,7 +17,7 @@ const URLS = CSE_NUMBER.map(
 );
 
 async function checkClassesAndNotify(url) {
-  console.log(`[${new Date().toLocaleString()}] Checking classes at ${url}...`);
+  //console.log(`[${new Date().toLocaleString()}] Checking classes at ${url}...`);
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
   await page.goto(url);
@@ -59,7 +59,7 @@ async function checkClassesAndNotify(url) {
         console.log(`Max notifications (${MAX_NOTIFICATIONS_PER_CLASS}) reached for class ${cls.classNumber} (${cls.title}). Skipping.`);
       } else if (now >= nextSend) {
         const message = `OPEN SEAT: ${cls.className}\n${cls.title}\nInstructor: ${cls.instructor}\nLocation: ${cls.location}\nSeats: ${cls.seats}`;
-        //await fetch(`https://ntfy.sh/${TOPIC}`, { method: 'POST', body: message });
+        await fetch(`https://ntfy.sh/${TOPIC}`, { method: 'POST', body: message });
         console.log(`[${new Date().toLocaleString()}] ntfy notification sent for class ${cls.classNumber}:`);
         console.log(message, '\n');
         console.log(`Next notification for class ${cls.classNumber} in ${tracker.interval} hour(s). (${tracker.notificationCount + 1}/${MAX_NOTIFICATIONS_PER_CLASS})\n`);
@@ -80,13 +80,14 @@ async function checkClassesAndNotify(url) {
   }
 
   await browser.close();
-  console.log('Check complete.\n');
+  //console.log('Check complete.\n');
 }
 
 // Run all checks in parallel
 function runAllChecks() {
+  console.log(`\n[${new Date().toLocaleString()}] Checking Classes:`);
   Promise.all(URLS.map(url => checkClassesAndNotify(url)));
 }
 
-setInterval(runAllChecks, CHECK_INTERVAL_MINUTES*0.1 * 60 * 1000);
+setInterval(runAllChecks, CHECK_INTERVAL_MINUTES * 60 * 1000);
 runAllChecks();
