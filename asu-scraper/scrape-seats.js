@@ -1,20 +1,25 @@
 import { chromium } from 'playwright';
 
-const CHECK_INTERVAL_MINUTES = 5;
-const TOPIC = ''; //ntfy topic
-const SKIP_CLASS_NUMBERS = [/* '80982' */];
+//---------------- PARAMETERS ----------------
+const CHECK_INTERVAL_MINUTES = 5; // How often to check
+const TOPIC = 'asu-alerts'; // ntfy topic
+
+const CLASS_SEARCH_NAME = ['CSE 471', 'CSE 475']; // The class search page (eg. will search every 471 & 475 class in the fall semester)
+const TERM_NUMBER = '2257' //2<year><term> | 1: spring, 4: summer, 7: fall
+
+const SKIP_CLASS_NUMBERS = []; // Use whitelist if you only care about specific classes
 const WHITELIST_CLASS_NUMBERS = ['85046', '77919']; // Only these will be checked
-const MAX_NOTIFICATIONS_PER_CLASS = 6; // Total notifications before stopping
+
+const MAX_NOTIFICATIONS_PER_CLASS = 6; // Total notifications (every hour) before stopping
+//--------------------------------------------
+
+const BASE_URL = 'https://catalog.apps.asu.edu/catalog/classes/classlist?campusOrOnlineSelection=C&honors=F&promod=F&searchType=all';
+const URLS = CLASS_SEARCH_NAME.map(item => {
+  const [subject, catalogNbr] = item.split(' ');
+  return `${BASE_URL}&subject=${subject}&catalogNbr=${catalogNbr}&term=${TERM_NUMBER}`;
+});
 
 const notifyTracker = {}; // { [classNumber]: { lastSent: timestamp, interval: hours } }
-
-const CSE_NUMBER = ['471', '475', ];
-
-const BASE_URL = 'https://catalog.apps.asu.edu/catalog/classes/classlist?campusOrOnlineSelection=C&honors=F&promod=F&searchType=all&subject=CSE&term=2257';
-
-const URLS = CSE_NUMBER.map(
-  num => `${BASE_URL}&catalogNbr=${num}`
-);
 
 async function checkClassesAndNotify(url) {
   //console.log(`[${new Date().toLocaleString()}] Checking classes at ${url}...`);
