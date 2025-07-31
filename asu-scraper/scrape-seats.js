@@ -2,7 +2,7 @@ import { chromium } from 'playwright';
 
 //---------------- PARAMETERS ----------------
 const CHECK_INTERVAL_MINUTES = 5; // How often to check
-const TOPIC = 'asu-alerts'; // ntfy topic
+const TOPIC = ''; // ntfy topic
 
 const CLASS_SEARCH_NAME = ['CSE 471', 'CSE 475']; // The class search page (eg. will search every 471 & 475 class in the fall semester)
 const TERM_NUMBER = '2257' //2<year><term> | 1: spring, 4: summer, 7: fall
