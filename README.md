@@ -7,7 +7,7 @@ Get updated when seats open for a class or classes. Uses the ntfy mobile app to 
 4) When a seat opens you will recieve an ntfy notification with the class info, then if the class remains open, every hour for 5 hours you will recieve another notification, after 5 hours you will stop recieving notifications. If the seats close again then the cap will reset and the cycle will repeat again if the class opens. This is so you're not getting spammed with notifications and not to abuse the ntfy service which is free.
 
 **Steps to run** (make sure you have node.js configured)
-git clone https://github.com/weadsy/find-open-seats-ASU.git
-cd find-open-seats-ASU
-npm install (installs playwright and chromium)
-npm start (or node scrape-seats.js)
+1) git clone https://github.com/weadsy/find-open-seats-ASU.git
+2) cd find-open-seats-ASU
+3) npm install (installs playwright and chromium)
+4) npm start (or node scrape-seats.js)
