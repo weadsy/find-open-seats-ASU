@@ -4,11 +4,11 @@ import { chromium } from 'playwright';
 const CHECK_INTERVAL_MINUTES = 5; // How often to check
 const TOPIC = ''; // ntfy topic
 
-const CLASS_SEARCH_NAME = ['CSE 471', 'CSE 475']; // The class search page (eg. will search every 471 & 475 class in the fall semester)
-const TERM_NUMBER = '2257' //2<year><term> | 1: spring, 4: summer, 7: fall
-
+const CLASS_SEARCH_NAME =       ['CSE 471', 'CSE 475']; // The class search page (eg. will search every 471 & 475 class in the fall semester)
+const WHITELIST_CLASS_NUMBERS = ['85046',   '77919']; // Only these will be checked
 const SKIP_CLASS_NUMBERS = []; // Use whitelist if you only care about specific classes
-const WHITELIST_CLASS_NUMBERS = ['85046', '77919']; // Only these will be checked
+
+const TERM_NUMBER = '2257' //2<year><term> | 1: spring, 4: summer, 7: fall
 
 const MAX_NOTIFICATIONS_PER_CLASS = 6; // Total notifications (every hour) before stopping
 //--------------------------------------------
@@ -21,10 +21,8 @@ const URLS = CLASS_SEARCH_NAME.map(item => {
 
 const notifyTracker = {}; // { [classNumber]: { lastSent: timestamp, interval: hours } }
 
-async function checkClassesAndNotify(url) {
+async function checkClassesAndNotify(page, url) {
   //console.log(`[${new Date().toLocaleString()}] Checking classes at ${url}...`);
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
   await page.goto(url);
   await page.waitForSelector('.class-results-cell.seats');
 
@@ -78,22 +76,28 @@ async function checkClassesAndNotify(url) {
         console.log(`Seats closed for class ${cls.classNumber} (${cls.title}), resetting notification count.`);
         notifyTracker[cls.classNumber] = { lastSent: 0, interval: 1, notificationCount: 0 };
       } else {
-        console.log(`No open seats: ${cls.className}, Instructor: ${cls.instructor}, Location: ${cls.location}`)
+        console.log(`(${cls.classNumber}) No open seats: ${cls.className}, Instructor: ${cls.instructor}, Location: ${cls.location}`)
       }
       
     }
   }
 
-  await browser.close();
   //console.log('Check complete.\n');
 }
 
-// Run all checks in parallel
+// Run all checks in parallel (1 browser multiple pages)
 async function runAllChecks() {
   console.log(`\n[${new Date().toLocaleString()}] Checking Classes:`);
-  await Promise.all(URLS.map(url => checkClassesAndNotify(url)));
+
+  const browser = await chromium.launch({ headless: true });
+  const pages = await Promise.all(URLS.map(() => browser.newPage()));
+
+  await Promise.all(
+    URLS.map((url, i) => checkClassesAndNotify(pages[i], url))
+  );
+
+  await browser.close();
   console.log(`Next check in ${CHECK_INTERVAL_MINUTES} minutes...`);
 }
-
 setInterval(runAllChecks, CHECK_INTERVAL_MINUTES * 60 * 1000);
 runAllChecks();
